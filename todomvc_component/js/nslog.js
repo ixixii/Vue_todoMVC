@@ -1,0 +1,1 @@
+function NSLog(loli) {console.log(loli);return 'Copyright © 2018 Powered by beyond';};  

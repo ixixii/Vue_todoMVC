@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<link rel="icon" href="/public/img/beyond2.jpg" type="image/x-icon"/>
+	    <meta charset="UTF-8">
+	    <meta name="author" content="beyond">
+	    <meta http-equiv="refresh" content="520">
+	    <meta name="description" content="未闻花名-免费零基础教程-beyond">
+	    <meta name="viewport" content="width=device-width, 
+	    initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	    <meta name="keywords" content="HTML,CSS,JAVASCRIPT,JQUERY,XML,JSON,C,C++,C#,OC,PHP,JAVA,JSP,PYTHON,RUBY,PERL,LUA,SQL,LINUX,SHELL,汇编,日语,英语,泰语,韩语,俄语,粤语,阿语,魔方,乐理,动漫,PR,PS,AI,AE">
+	    <title>beyond心中の动漫神作</title>
+		<link rel="stylesheet" href="css/todomvc_base.css">
+		<link rel="stylesheet" href="css/todomvc_index.css">
+		
+		<link rel="stylesheet" href="css/beyondbasestylewhite5.css">
+		<style type="text/css">
+			/*解决Mustache 闪烁问题
+				起初div是隐藏的
+				当Vue数据绑定完成后,重新渲染时,会自动将v-cloak属性移除
+			*/
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+	<div v-cloak id="id_div_container">
+		<section class="todoapp">
+			<header class="header">
+				<h1 style="color:white;text-shadow:2px 2px 4px #e5cdcf;letter-spacing:5px;font-family:inherit;font-weight:380;" class="sgcontentcolor sgcenter">  
+		            あの花
+		        </h1>
+
+		        <!-- 按下enter时,添加到数组 -->
+				<input @keydown.enter="addAnimeFunction"
+				 class="new-todo" placeholder="请输入动漫名,按回车键录入" autofocus>
+			</header>
+
+
+			<!-- 使用虚拟元素template将这个元素两个包起来 
+				 1是为了 避免代码冗余
+				 2是为了 避免套上额外的div
+			-->
+			<template v-if="animeArr.length">
+				<!-- 数组没有东西时,不要渲染 -->
+				<section class="main">
+					<!-- 全选/全不选
+						 方式1: 在这儿监听 change 事件 
+								 v-on:change="selectAllOrNotFunction"
+
+						 方式2:  MVVM 高级玩法
+						 使用计算属性chooseAllOrNot作为v-model 实现双向绑定 到checkbox
+
+						 因为checkbox既有初始值, 又要勾选设置值,所以要双向绑定
+
+						 所以,当初始化checkbox时, 会调用计算属性的getter方法
+
+						 而当你勾选checkbox的时候,就会自动调用计算属性的 setter方法
+					 -->
+					<input id="toggle-all" class="toggle-all" type="checkbox"
+					v-model="chooseAllOrNot"
+					>
+					<label for="toggle-all">Mark all as complete</label>
+
+
+					<ul class="todo-list">
+						<!--  三种样式
+							  `editing` when editing 
+						 	  `completed` when marked as completed 
+
+						 	  这儿实行的是单向绑定class
+					 	 -->
+
+					 	 <!-- 注意: 下面这儿关于当前编辑的样式editing 有点儿巧妙
+						data新增一个属性 currentEditAnime, 保存的是那一个被双击的 anime对象
+						如果 两个对象一样时, 自动进入 正在编辑样式
+						 -->
+
+						<li v-for="(anime,index) in filtedAnimeArr"
+
+						v-bind:class="{completed: anime.animeHaveSeen,
+						editing: currentEditAnime === anime
+						}"
+						>
+
+							<div class="view">
+								<!-- 根据状态选择是否选中
+									 这儿实现的双向绑定
+								 -->
+								<input class="toggle" type="checkbox" 
+								 v-model="anime.animeHaveSeen"
+								>
+
+								<!-- 上面的双击 要传递3个参数
+							 	  第1是:  双击事件
+							 	  第2是:  索引
+							 	  第3是:  anime对象
+							    -->
+								<label v-on:dblclick="doubleClickFunction($event,index,anime)">{{ anime.animeName }}</label>
+
+								<!-- 点击按钮删除item 
+									 注意: 
+									 第1个参数是索引,
+									 第2个参数是手动传递的事件 $event 对象
+									 (固定写法,死记硬背)
+								-->
+								<button class="destroy"
+								v-on:click="deleteAnimeBtnClicked($event,index)"
+								></button>
+
+							</div>
+
+							<!-- 编辑框 必须是单向绑定,因为
+							1. 还有esc撤销编辑的功能 
+							2. 去除editing样式,即把currentEditAnime置空即可
+							3. 敲回车 或 失去焦点自动保存
+							   如果没有内容,则自动删除该item
+
+
+							   使用自定义指令 自动聚焦,条件是 当前编辑的对象是自己
+							-->
+							<input class="edit" v-bind:value="anime.animeName"
+							v-on:keydown.enter="editCompleteFunction($event,index,anime)"
+							v-on:blur="editCompleteFunction($event,index,anime)"
+							v-on:keydown.esc="cancleEditFunction"
+							v-beyond-focus="currentEditAnime === anime"  
+							>
+						</li>
+					</ul>
+				</section>
+
+				<!-- 数组没有东西时,不要渲染 -->
+				<footer class="footer">
+					<!-- 剩余未未完成的数量
+						 这儿有3种写法:
+						 第1种: 直接在Mustache语法中 进行 数组的 filter
+						 第2种: 使用方法包装
+						 第3种: 使用计算属性
+					 -->
+					<span class="todo-count">
+						<strong>
+							<!-- 第1种 -->
+							<!-- {{ animeArr.filter(anime => 
+								!anime.animeHaveSeen
+							).length }} -->
+
+
+							<!-- 第2种,使用方法 包装 
+								 要主动调用一下方法
+								 如果多处要到的话,会有重复计算的性能问题
+							-->
+							<!-- {{ unSeenAnimeCountFunction() }} -->
+
+
+							<!-- 第3种, 计算属性
+								 好处1: 有缓存 (会缓存计算结果,提高性能)
+								 好处2: 模板没有 厚重的逻辑
+								 好处3: 易维护
+
+								 注意: 计算属性 必须也只能按属性使用 (不能用于事件处理函数,虽然它本质是getter和setter方法)
+							 -->
+							 {{ unSeenAnimeCount }}
+					</strong>
+					 item left</span>
+
+					<!-- 1. 根据 路由routing 的切换, 导致window.location.hash变化
+						 2. 而监听到地址栏的hash的变化时 , 又人为导致 data中的一个 中间变量(hashString)的变化 
+					 	 3. 而条件(hashString)的变化 , 又改变 计算属性 返回的结果数组 filtedAnimeArr 
+					 	 4. 从而实现了对 列表的过滤与切换  -->
+					<ul class="filters">
+						<li>
+							<a v-bind:class="{selected: hashString === ''}" href="#/">All</a>
+						</li>
+						<li>
+							<a v-bind:class="{selected: hashString === 'active'}" href="#/active">Active</a>
+						</li>
+						<li>
+							<a v-bind:class="{selected: hashString === 'completed'}" href="#/completed">Completed</a>
+						</li>
+					</ul>
+					<!-- 如果没有已经完成的item, 那么不渲染这个按钮 
+					这儿非常巧妙地使用 array的some函数
+					-->
+					<button v-if="animeArr.some(anime => anime.animeHaveSeen)" class="clear-completed"
+					v-on:click="clearCompletedAnimeBtnClicked"
+					>Clear completed</button>
+				</footer>
+
+			</template>
+
+
+
+		</section>
+
+		<footer id="copyright">
+            <p style="font-size:14px;text-align:center;font-style:italic;">  
+            Copyright © <a id="author">2018</a> Powered by <a id="author">beyond</a>  
+            </p>        
+        </footer>
+	</div>
+
+        <script type="text/javascript" src="js/nslog.js"></script>
+
+		<!-- 第1步,导入vue.js -->
+		<!-- // <script type="text/javascript" src="node_modules/vue/dist/vue.js"></script> -->
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<!-- 第2步,导入自己的代码appVue.js -->
+		<script type="text/javascript" src="js/appVue.js"></script>
+
+	</body>
+</html>

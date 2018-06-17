@@ -1,0 +1,51 @@
+@import url(http://fonts.googleapis.com/css?family=Julius+Sans+One|Libre+Baskerville:400,400italic);
+
+header, section, footer, aside, nav, article, figure
+ { 
+ display: block; 
+ } 
+
+/* 
+	深色背景,就给body添加这个样式
+	id="sgdarkbackground"
+*/
+#sgdarkbackground {
+	background-color: rgb(9,7,26);
+}
+/*
+	例如:正文居中,字体正常,颜色特定,就可以使用以下组合;
+	class="sgcenter sgfontnormal sgcontentcolor"
+*/
+/*居中*/
+.sgcenter {
+	text-align: center;
+}
+/*字体正常*/
+.sgfontnormal {
+	font-style: normal;
+}
+
+/*正文颜色*/
+.sgcontentcolor {
+	/*color: rgba(168,168,168,1);*/
+	color: rgba(78,78,78,1);
+}
+/*左外边距*/
+p {
+	margin-left: 6px;
+}
+
+/* 这个是版权 */
+#copyright{
+	color: rgba(113,112,127,0.55);
+	font-size: 18px;
+	text-align: center;	
+	font-family: 'Libre Baskerville', sans-serif;
+	font-style: normal;
+}
+/*这个是作者*/
+#author{
+	color: rgba(113,112,127,1);
+	/*color:#2965a8;*/
+	font-style: normal;
+}

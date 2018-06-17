@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<link rel="icon" href="/beyond.jpg" type="image/x-icon"/>
+	    <meta charset="UTF-8">
+	    <meta name="author" content="beyond">
+	    <meta http-equiv="refresh" content="520">
+	    <meta name="description" content="未闻花名-免费零基础教程-beyond">
+	    <meta name="viewport" content="width=device-width, 
+	    initial-scale=1.0, maximum-scale=1.0,minimum-scale=1.0,user-scalable=0" />
+	    <meta name="keywords" content="HTML,CSS,JAVASCRIPT,JQUERY,XML,JSON,C,C++,C#,OC,PHP,JAVA,JSP,PYTHON,RUBY,PERL,LUA,SQL,LINUX,SHELL,汇编,日语,英语,泰语,韩语,俄语,粤语,阿语,魔方,乐理,动漫,PR,PS,AI,AE">
+	    <title>beyond心中の动漫神作</title>
+		<link rel="stylesheet" href="css/todomvc_base.css">
+		<link rel="stylesheet" href="css/todomvc_index.css">
+		
+		<link rel="stylesheet" href="css/beyondbasestylewhite5.css">
+		<style type="text/css">
+			/*解决Mustache 闪烁问题
+				起初div是隐藏的
+				当Vue数据绑定完成后,重新渲染时,会自动将v-cloak属性移除
+			*/
+			[v-cloak] {
+				display: none;
+			}
+		</style>
+		<script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-6089737704690620",
+    enable_page_level_ads: true
+  });
+</script>
+	</head>
+	<body>
+<div v-cloak id="id_div_container">	
+	<!-- 使用大组件 -->
+	<beyond-component v-bind:key_hash='hashString' />
+</div>		
+		
+		<!-- 第1步,导入vue.js -->
+		<!-- <script type="text/javascript" src="node_modules/vue/dist/vue.js"></script> -->
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+
+		<script type="text/javascript" src="js/nslog.js"></script>
+		<!-- 第2步,导入自己的代码 四个小组件.js -->
+		<script type="text/javascript" src="js/beyond-header.js"></script>
+
+		<script type="text/javascript" src="js/beyond-main.js"></script>
+		
+		<script type="text/javascript" src="js/beyond-footer.js"></script>
+		
+		<script type="text/javascript" src="js/beyond-copyright.js"></script>
+		<!-- 第3步,导入自己的代码 大组件.js -->
+		<script type="text/javascript" src="js/beyond-component.js"></script>
+
+		<!-- 第4步,导入自己的代码appVue.js -->
+		<script type="text/javascript" src="js/appVue.js"></script>
+	</body>
+</html>
